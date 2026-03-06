@@ -41,8 +41,6 @@ transition:0.3s;
 transform:scale(1.1);
 }
 
-/* puzzle */
-
 #puzzle{
 width:360px;
 margin:30px auto;
@@ -54,8 +52,9 @@ display:none;
 
 .piece{
 width:100%;
-aspect-ratio:1/1;
-background-size:300% 300%;
+height:120px;
+background-size:360px auto;
+background-repeat:no-repeat;
 cursor:pointer;
 border-radius:10px;
 transition:all 0.35s ease;
@@ -157,16 +156,28 @@ puzzle.style.display="grid"
 createPuzzle(imageSrc)
 
 
-/* create puzzle */
-
 function createPuzzle(image){
+
+let img = new Image()
+img.src = image
+
+img.onload = function(){
+
+let puzzleWidth = 360
+let ratio = img.height / img.width
+let puzzleHeight = puzzleWidth * ratio
+
+puzzle.style.height = puzzleHeight + "px"
+
+let pieceW = puzzleWidth / 3
+let pieceH = puzzleHeight / 3
 
 let positions=[]
 
 for(let y=0;y<3;y++){
 for(let x=0;x<3;x++){
 
-positions.push(`${x*50}% ${y*50}%`)
+positions.push(`${-x*pieceW}px ${-y*pieceH}px`)
 
 }
 }
@@ -180,10 +191,14 @@ piece.className="piece"
 
 piece.dataset.correct=positions[i]
 
-piece.style.backgroundImage=`url(${image})`
+piece.style.height = pieceH + "px"
+piece.style.backgroundImage="url("+image+")"
+piece.style.backgroundSize=puzzleWidth+"px "+puzzleHeight+"px"
 piece.style.backgroundPosition=shuffled[i]
 
 puzzle.appendChild(piece)
+
+}
 
 }
 
@@ -287,5 +302,6 @@ setTimeout(()=>h.remove(),2000)
 
 </body>
 </html>
+
 
 
