@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
-<title>To my baby</title>
+<title>To my babyy❤️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
@@ -12,14 +11,23 @@
 body{
 font-family:'Dancing Script',cursive;
 text-align:center;
-background:#e6c3d5;
+background:linear-gradient(135deg,#ffd6eb,#ffe6f3);
+overflow-x:hidden;
 margin:0;
 }
 
 h1{
 margin-top:40px;
 color:#ff2e8a;
-font-size:42px;
+font-size:40px;
+font-style:italic;
+}
+
+#msg{
+font-size:34px;
+color:#ff0066;
+display:none;
+margin-top:20px;
 }
 
 button{
@@ -31,46 +39,63 @@ border-radius:30px;
 background:#ff4da6;
 color:white;
 cursor:pointer;
-margin-top:40px;
+box-shadow:0 5px 10px rgba(0,0,0,0.2);
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+}
+
+#startScreen{
+margin-top:80px;
+}
+
+#game{
+display:none;
+margin-top:30px;
 }
 
 #puzzle{
-width:330px;
+width:300px;
+height:300px;
 margin:auto;
 display:grid;
-grid-template-columns:repeat(3,110px);
-grid-template-rows:repeat(3,110px);
-gap:6px;
+grid-template-columns:repeat(3,1fr);
+grid-template-rows:repeat(3,1fr);
+gap:2px;
 }
 
 .piece{
-width:110px;
-height:110px;
+width:100px;
+height:100px;
 background-image:url('yourimage.jpeg');
-background-size:330px 330px;
-border-radius:15px;
+background-size:300px 300px;
 cursor:pointer;
+transition:0.3s;
 }
 
 #finalImage{
 display:none;
-width:330px;
-height:330px;
-object-fit:cover;
-border-radius:20px;
 margin:auto;
+width:300px;
+height:300px;
+object-fit:cover;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
 }
 
-#msg{
-font-size:40px;
-color:#ff0066;
-margin-top:30px;
-display:none;
+.heart{
+position:fixed;
+bottom:-20px;
+font-size:20px;
+animation:float 6s linear infinite;
+opacity:0.7;
 }
 
-.emoji{
-font-family:initial;
-font-style:normal;
+@keyframes float{
+0%{transform:translateY(0) scale(1);opacity:0.8;}
+100%{transform:translateY(-100vh) scale(1.5);opacity:0;}
 }
 
 </style>
@@ -78,21 +103,18 @@ font-style:normal;
 
 <body>
 
-<h1>Fix the puzzle <span class="emoji">🧩</span></h1>
-
-<div id="start">
-<button onclick="startGame()">Yes <span class="emoji">❤️</span></button>
+<div id="startScreen">
+<p style="font-size:30px;">Will you try to fix it? 🥺</p>
+<button onclick="startGame()">Yes ❤️</button>
 </div>
 
-<div id="game" style="display:none">
+<div id="game">
 
 <div id="puzzle"></div>
 
 <img id="finalImage" src="yourimage.jpeg">
 
-<div id="msg">
-I'm sorry . Love you <span class="emoji">🥺❤️</span>
-</div>
+<div id="msg">I'm sorry cutie 🥺❤️</div>
 
 </div>
 
@@ -101,10 +123,9 @@ I'm sorry . Love you <span class="emoji">🥺❤️</span>
 let puzzle=document.getElementById("puzzle")
 let size=3
 let pieces=[]
-let first=null
 
 function startGame(){
-document.getElementById("start").style.display="none"
+document.getElementById("startScreen").style.display="none"
 document.getElementById("game").style.display="block"
 createPuzzle()
 }
@@ -115,40 +136,42 @@ for(let y=0;y<size;y++){
 for(let x=0;x<size;x++){
 
 let piece=document.createElement("div")
-
 piece.className="piece"
 
-piece.style.backgroundPosition=`${-x*110}px ${-y*110}px`
+piece.style.backgroundPosition=
+`${-x*100}px ${-y*100}px`
 
 piece.dataset.correct=x+","+y
-
 pieces.push(piece)
 
 puzzle.appendChild(piece)
-
-piece.onclick=()=>select(piece)
 
 }
 }
 
 shuffle()
 
+pieces.forEach(piece=>{
+piece.addEventListener("click",()=>selectPiece(piece))
+})
+
 }
 
-function select(piece){
+let first=null
+
+function selectPiece(piece){
 
 if(!first){
 first=piece
 piece.style.outline="3px solid white"
-}else{
+}
+else{
 
 swap(first,piece)
-
 first.style.outline="none"
-
 first=null
 
-check()
+checkSolved()
 
 }
 
@@ -164,7 +187,7 @@ b.style.backgroundPosition=temp
 
 function shuffle(){
 
-for(let i=0;i<40;i++){
+for(let i=0;i<50;i++){
 
 let a=pieces[Math.floor(Math.random()*pieces.length)]
 let b=pieces[Math.floor(Math.random()*pieces.length)]
@@ -175,32 +198,48 @@ swap(a,b)
 
 }
 
-function check(){
+function checkSolved(){
 
 let correct=true
 
-pieces.forEach(p=>{
+pieces.forEach(piece=>{
 
-let pos=p.style.backgroundPosition.split(" ")
+let pos=piece.style.backgroundPosition.split(" ")
 
-let x=parseInt(pos[0])/-110
-let y=parseInt(pos[1])/-110
+let x=parseInt(pos[0])/-100
+let y=parseInt(pos[1])/-100
 
-if(p.dataset.correct!=(x+","+y)) correct=false
+if(piece.dataset.correct!=(x+","+y)){
+correct=false
+}
 
 })
 
 if(correct){
 
 puzzle.style.display="none"
-
 document.getElementById("finalImage").style.display="block"
-
 document.getElementById("msg").style.display="block"
 
 }
 
 }
+
+function createHeart(){
+
+let heart=document.createElement("div")
+heart.className="heart"
+heart.innerHTML="❤️"
+
+heart.style.left=Math.random()*100+"%"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),6000)
+
+}
+
+setInterval(createHeart,600)
 
 </script>
 
