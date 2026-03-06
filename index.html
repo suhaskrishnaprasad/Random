@@ -23,7 +23,7 @@ height:360px;
 margin:30px auto;
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:2px;
+gap:3px;
 }
 
 .piece{
@@ -84,26 +84,33 @@ createPuzzle(croppedImage)
 
 function createPuzzle(image){
 
-let pieces=[]
+let positions=[]
+
+for(let i=0;i<9;i++){
+
+let x=(i%3)*120
+let y=Math.floor(i/3)*120
+
+positions.push({x,y})
+
+}
+
+let shuffled=[...positions].sort(()=>Math.random()-0.5)
 
 for(let i=0;i<9;i++){
 
 let piece=document.createElement("div")
 piece.className="piece"
 
-let x=(i%3)*120
-let y=Math.floor(i/3)*120
+piece.dataset.correctX = positions[i].x
+piece.dataset.correctY = positions[i].y
 
 piece.style.backgroundImage="url("+image+")"
-piece.style.backgroundPosition=`-${x}px -${y}px`
+piece.style.backgroundPosition=`-${shuffled[i].x}px -${shuffled[i].y}px`
 
-pieces.push(piece)
+puzzle.appendChild(piece)
 
 }
-
-pieces.sort(()=>Math.random()-0.5)
-
-pieces.forEach(p=>puzzle.appendChild(p))
 
 }
 
@@ -112,14 +119,15 @@ puzzle.addEventListener("click",e=>{
 if(!e.target.classList.contains("piece")) return
 
 if(!selected){
+
 selected=e.target
 selected.style.opacity="0.5"
-}
-else{
 
-let temp=selected.style.backgroundPosition
-selected.style.backgroundPosition=e.target.style.backgroundPosition
-e.target.style.backgroundPosition=temp
+}else{
+
+let temp=e.target.style.backgroundPosition
+e.target.style.backgroundPosition=selected.style.backgroundPosition
+selected.style.backgroundPosition=temp
 
 selected.style.opacity="1"
 selected=null
