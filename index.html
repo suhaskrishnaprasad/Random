@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +29,7 @@ gap:2px;
 .piece{
 width:120px;
 height:120px;
-background-size:cover;
+background-size:360px 360px;
 cursor:pointer;
 border:1px solid white;
 }
@@ -53,7 +54,35 @@ display:none;
 <script>
 
 const puzzle = document.getElementById("puzzle")
-const image = "yourimage.jpeg"
+const imageSrc = "yourimage.jpeg"
+
+let selected = null
+
+const img = new Image()
+img.src = imageSrc
+
+img.onload = function(){
+
+let size = Math.min(img.width, img.height)
+
+let canvas = document.createElement("canvas")
+canvas.width = size
+canvas.height = size
+
+let ctx = canvas.getContext("2d")
+
+let sx = (img.width - size)/2
+let sy = (img.height - size)/2
+
+ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size)
+
+let croppedImage = canvas.toDataURL()
+
+createPuzzle(croppedImage)
+
+}
+
+function createPuzzle(image){
 
 let pieces=[]
 
@@ -66,7 +95,7 @@ let x=(i%3)*120
 let y=Math.floor(i/3)*120
 
 piece.style.backgroundImage="url("+image+")"
-piece.style.backgroundPosition = "center";
+piece.style.backgroundPosition=`-${x}px -${y}px`
 
 pieces.push(piece)
 
@@ -76,7 +105,7 @@ pieces.sort(()=>Math.random()-0.5)
 
 pieces.forEach(p=>puzzle.appendChild(p))
 
-let selected=null
+}
 
 puzzle.addEventListener("click",e=>{
 
@@ -127,5 +156,4 @@ document.getElementById("msg").style.display="block"
 
 </body>
 </html>
-
-
+```
