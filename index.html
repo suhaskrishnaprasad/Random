@@ -92,8 +92,7 @@ I’m sorry cutie 🥺❤️
 
 <script>
 
-const image="yourimage.jpeg"   // make sure this matches your real file name
-const puzzle=document.getElementById("puzzle")
+const image="yourimage.jpeg"
 
 let pieces=[]
 
@@ -105,10 +104,11 @@ piece.className="piece"
 let x=(i%3)*120
 let y=Math.floor(i/3)*120
 
-piece.style.backgroundImage=`url(${image})`
+piece.style.backgroundImage = "url('" + image + "')"
 piece.style.backgroundPosition=`-${x}px -${y}px`
 
 pieces.push(piece)
+
 
 }
 
@@ -208,4 +208,5 @@ setTimeout(()=>heart.remove(),2000)
 
 </body>
 </html>
+
 
