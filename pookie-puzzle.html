@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For My Pookie ❤️</title>
+
+<style>
+
+body{
+margin:0;
+font-family: "Comic Sans MS", cursive;
+background: linear-gradient(135deg,#ffe6f0,#ffd6eb);
+text-align:center;
+overflow-x:hidden;
+}
+
+h1{
+color:#ff4da6;
+margin-top:40px;
+}
+
+#puzzle{
+width:360px;
+height:360px;
+margin:30px auto;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:4px;
+}
+
+.piece{
+width:120px;
+height:120px;
+background-size:360px 360px;
+border-radius:10px;
+cursor:grab;
+}
+
+#msg{
+margin-top:20px;
+font-size:22px;
+color:#ff1a75;
+opacity:0;
+transition:0.5s;
+}
+
+/* floating hearts */
+
+.heart{
+position:fixed;
+font-size:18px;
+animation:float 6s linear infinite;
+opacity:0.6;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0}
+50%{opacity:0.8}
+100%{transform:translateY(-10vh);opacity:0}
+}
+
+/* heart blast */
+
+.blast-heart{
+position:fixed;
+font-size:24px;
+animation:blast 2s forwards;
+}
+
+@keyframes blast{
+0%{
+transform:scale(0.5);
+opacity:1;
+}
+100%{
+transform:translateY(-200px) scale(1.8);
+opacity:0;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Fix the puzzle to unlock our memory 🧩💖</h1>
+
+<div id="puzzle"></div>
+
+<div id="msg">
+I’m sorry pookie 🥺❤️  
+You mean the world to me.
+</div>
+
+<script>
+
+const image="yourimage.jpg"
+const puzzle=document.getElementById("puzzle")
+
+let pieces=[]
+let correct=[]
+
+for(let i=0;i<9;i++){
+
+let piece=document.createElement("div")
+piece.className="piece"
+
+let x=(i%3)*120
+let y=Math.floor(i/3)*120
+
+piece.style.backgroundImage=`url(${image})`
+piece.style.backgroundPosition=`-${x}px -${y}px`
+
+piece.dataset.correct=i
+
+pieces.push(piece)
+correct.push(i)
+
+}
+
+pieces.sort(()=>Math.random()-0.5)
+
+pieces.forEach(p=>puzzle.appendChild(p))
+
+let selected=null
+
+puzzle.addEventListener("click",e=>{
+
+if(!selected){
+selected=e.target
+selected.style.opacity="0.6"
+}
+else{
+let temp=selected.style.backgroundPosition
+selected.style.backgroundPosition=e.target.style.backgroundPosition
+e.target.style.backgroundPosition=temp
+
+selected.style.opacity="1"
+selected=null
+
+checkWin()
+}
+
+})
+
+function checkWin(){
+
+let win=true
+
+[...puzzle.children].forEach((p,i)=>{
+
+let x=(i%3)*120
+let y=Math.floor(i/3)*120
+
+if(p.style.backgroundPosition!=`-${x}px -${y}px`)
+win=false
+
+})
+
+if(win){
+
+document.getElementById("msg").style.opacity=1
+heartBlast()
+
+}
+
+}
+
+/* floating hearts */
+
+function createHeart(){
+
+let heart=document.createElement("div")
+heart.className="heart"
+heart.innerHTML="💗"
+
+heart.style.left=Math.random()*100+"vw"
+heart.style.animationDuration=(4+Math.random()*3)+"s"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),7000)
+
+}
+
+setInterval(createHeart,800)
+
+/* heart blast */
+
+function heartBlast(){
+
+for(let i=0;i<20;i++){
+
+let heart=document.createElement("div")
+heart.className="blast-heart"
+heart.innerHTML="💖"
+
+heart.style.left=(window.innerWidth/2 + (Math.random()*200-100))+"px"
+heart.style.top=(window.innerHeight/2)+"px"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),2000)
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
