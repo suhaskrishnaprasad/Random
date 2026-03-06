@@ -7,8 +7,8 @@
 
 body{
 margin:0;
-font-family: "Comic Sans MS", cursive;
-background: linear-gradient(135deg,#ffe6f0,#ffd6eb);
+font-family:"Comic Sans MS",cursive;
+background:linear-gradient(135deg,#ffe6f0,#ffd6eb);
 text-align:center;
 overflow-x:hidden;
 }
@@ -93,11 +93,10 @@ You mean the world to me.
 
 <script>
 
-const image="yourimage.jpg"
+const image="yourimage.jpeg"   // make sure this matches your real file name
 const puzzle=document.getElementById("puzzle")
 
 let pieces=[]
-let correct=[]
 
 for(let i=0;i<9;i++){
 
@@ -110,10 +109,7 @@ let y=Math.floor(i/3)*120
 piece.style.backgroundImage=`url(${image})`
 piece.style.backgroundPosition=`-${x}px -${y}px`
 
-piece.dataset.correct=i
-
 pieces.push(piece)
-correct.push(i)
 
 }
 
@@ -125,11 +121,14 @@ let selected=null
 
 puzzle.addEventListener("click",e=>{
 
+if(!e.target.classList.contains("piece")) return
+
 if(!selected){
 selected=e.target
 selected.style.opacity="0.6"
 }
 else{
+
 let temp=selected.style.backgroundPosition
 selected.style.backgroundPosition=e.target.style.backgroundPosition
 e.target.style.backgroundPosition=temp
@@ -138,6 +137,7 @@ selected.style.opacity="1"
 selected=null
 
 checkWin()
+
 }
 
 })
@@ -151,7 +151,7 @@ let win=true
 let x=(i%3)*120
 let y=Math.floor(i/3)*120
 
-if(p.style.backgroundPosition!=`-${x}px -${y}px`)
+if(p.style.backgroundPosition!==`-${x}px -${y}px`)
 win=false
 
 })
@@ -208,5 +208,4 @@ setTimeout(()=>heart.remove(),2000)
 </script>
 
 </body>
-
 </html>
