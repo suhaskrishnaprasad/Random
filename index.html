@@ -2,14 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Puzzle</title>
+<title>sorry cutie 🥺❤️</title>
 
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 text-align:center;
-background:#ffd6eb;
+background:linear-gradient(135deg,#ffd6eb,#ffe6f3);
+overflow-x:hidden;
 }
 
 h1{
@@ -23,7 +24,7 @@ height:360px;
 margin:30px auto;
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:3px;
+gap:4px;
 }
 
 .piece{
@@ -31,13 +32,61 @@ width:120px;
 height:120px;
 background-size:360px 360px;
 cursor:pointer;
-border:1px solid white;
+border-radius:8px;
+transition:all 0.35s ease;
+}
+
+.selected{
+transform:scale(0.9);
+opacity:0.6;
 }
 
 #msg{
-font-size:22px;
+font-size:24px;
 color:#ff0066;
 display:none;
+margin-top:20px;
+animation:fadeIn 1s ease;
+}
+
+/* floating hearts */
+
+.heart{
+position:fixed;
+bottom:-20px;
+font-size:18px;
+opacity:0.7;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0);opacity:0}
+20%{opacity:0.8}
+100%{transform:translateY(-110vh);opacity:0}
+}
+
+/* heart burst */
+
+.blast{
+position:fixed;
+font-size:22px;
+animation:burst 1.8s forwards;
+}
+
+@keyframes burst{
+0%{
+transform:scale(0.5);
+opacity:1;
+}
+100%{
+transform:translateY(-200px) scale(1.5);
+opacity:0;
+}
+}
+
+@keyframes fadeIn{
+from{opacity:0}
+to{opacity:1}
 }
 
 </style>
@@ -49,38 +98,40 @@ display:none;
 
 <div id="puzzle"></div>
 
-<div id="msg">Puzzle Solved ❤️</div>
+<div id="msg">I’m sorry cutie 🥺❤️</div>
 
 <script>
 
 const puzzle = document.getElementById("puzzle")
 const imageSrc = "yourimage.jpeg"
 
-let selected = null
+let selected=null
 
-const img = new Image()
-img.src = imageSrc
+const img=new Image()
+img.src=imageSrc
 
-img.onload = function(){
+img.onload=function(){
 
-let size = Math.min(img.width, img.height)
+let size=Math.min(img.width,img.height)
 
-let canvas = document.createElement("canvas")
-canvas.width = size
-canvas.height = size
+let canvas=document.createElement("canvas")
+canvas.width=size
+canvas.height=size
 
-let ctx = canvas.getContext("2d")
+let ctx=canvas.getContext("2d")
 
-let sx = (img.width - size)/2
-let sy = (img.height - size)/2
+let sx=(img.width-size)/2
+let sy=(img.height-size)/2
 
-ctx.drawImage(img, sx, sy, size, size, 0, 0, size, size)
+ctx.drawImage(img,sx,sy,size,size,0,0,size,size)
 
-let croppedImage = canvas.toDataURL()
+let croppedImage=canvas.toDataURL()
 
 createPuzzle(croppedImage)
 
 }
+
+/* create puzzle */
 
 function createPuzzle(image){
 
@@ -102,9 +153,6 @@ for(let i=0;i<9;i++){
 let piece=document.createElement("div")
 piece.className="piece"
 
-piece.dataset.correctX = positions[i].x
-piece.dataset.correctY = positions[i].y
-
 piece.style.backgroundImage="url("+image+")"
 piece.style.backgroundPosition=`-${shuffled[i].x}px -${shuffled[i].y}px`
 
@@ -114,6 +162,8 @@ puzzle.appendChild(piece)
 
 }
 
+/* click logic */
+
 puzzle.addEventListener("click",e=>{
 
 if(!e.target.classList.contains("piece")) return
@@ -121,15 +171,16 @@ if(!e.target.classList.contains("piece")) return
 if(!selected){
 
 selected=e.target
-selected.style.opacity="0.5"
+selected.classList.add("selected")
 
 }else{
 
 let temp=e.target.style.backgroundPosition
+
 e.target.style.backgroundPosition=selected.style.backgroundPosition
 selected.style.backgroundPosition=temp
 
-selected.style.opacity="1"
+selected.classList.remove("selected")
 selected=null
 
 checkWin()
@@ -137,6 +188,8 @@ checkWin()
 }
 
 })
+
+/* check win */
 
 function checkWin(){
 
@@ -155,7 +208,50 @@ win=false
 })
 
 if(win){
+
 document.getElementById("msg").style.display="block"
+heartBurst()
+
+}
+
+}
+
+/* floating hearts */
+
+function createHeart(){
+
+let heart=document.createElement("div")
+heart.className="heart"
+heart.innerHTML="💗"
+
+heart.style.left=Math.random()*100+"vw"
+heart.style.animationDuration=(4+Math.random()*3)+"s"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),7000)
+
+}
+
+setInterval(createHeart,800)
+
+/* heart explosion */
+
+function heartBurst(){
+
+for(let i=0;i<20;i++){
+
+let h=document.createElement("div")
+h.className="blast"
+h.innerHTML="💖"
+
+h.style.left=(window.innerWidth/2 + (Math.random()*200-100))+"px"
+h.style.top=(window.innerHeight/2)+"px"
+
+document.body.appendChild(h)
+
+setTimeout(()=>h.remove(),2000)
+
 }
 
 }
