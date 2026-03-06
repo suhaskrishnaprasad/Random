@@ -45,7 +45,6 @@ transform:scale(1.1);
 
 #puzzle{
 width:360px;
-height:360px;
 margin:30px auto;
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -54,9 +53,9 @@ display:none;
 }
 
 .piece{
-width:120px;
-height:120px;
-background-size:360px 360px;
+width:100%;
+aspect-ratio:1/1;
+background-size:300% 300%;
 cursor:pointer;
 border-radius:10px;
 transition:all 0.35s ease;
@@ -155,29 +154,8 @@ puzzle.style.display="grid"
 
 /* load image */
 
-const img=new Image()
-img.src=imageSrc
+createPuzzle(imageSrc)
 
-img.onload=function(){
-
-let size=Math.min(img.width,img.height)
-
-let canvas=document.createElement("canvas")
-canvas.width=size
-canvas.height=size
-
-let ctx=canvas.getContext("2d")
-
-let sx=(img.width-size)/2
-let sy=(img.height-size)/2
-
-ctx.drawImage(img,sx,sy,size,size,0,0,size,size)
-
-let croppedImage=canvas.toDataURL()
-
-createPuzzle(croppedImage)
-
-}
 
 /* create puzzle */
 
@@ -185,13 +163,12 @@ function createPuzzle(image){
 
 let positions=[]
 
-for(let i=0;i<9;i++){
+for(let y=0;y<3;y++){
+for(let x=0;x<3;x++){
 
-let x=(i%3)*120
-let y=Math.floor(i/3)*120
+positions.push(`${x*50}% ${y*50}%`)
 
-positions.push(`${-x}px ${-y}px`)
-
+}
 }
 
 let shuffled=[...positions].sort(()=>Math.random()-0.5)
@@ -203,7 +180,7 @@ piece.className="piece"
 
 piece.dataset.correct=positions[i]
 
-piece.style.backgroundImage="url("+image+")"
+piece.style.backgroundImage=`url(${image})`
 piece.style.backgroundPosition=shuffled[i]
 
 puzzle.appendChild(piece)
@@ -310,3 +287,4 @@ setTimeout(()=>h.remove(),2000)
 
 </body>
 </html>
+
